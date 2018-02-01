@@ -12,17 +12,16 @@ public class Controller {
     private FileSelector fs = new FileSelector();
 
     @FXML private ListView fileList;
-
     @FXML private ComboBox folderSelector;
-
     @FXML private Button cancelButton;
-
     @FXML private Button openButton;
-    
-    private String path = System.getProperty("user.dir");
+
+    public void changePath(String path){
+        fileList.getItems().setAll(fs.getListFile(path));
+        folderSelector.getItems().setAll(fs.getListRepParent(path));
+    }
 
     private ChangeListener<String> folderListener;
-
     private EventHandler cancelListener;
 
     @FXML public void initialize(){
@@ -38,17 +37,18 @@ public class Controller {
 
         cancelButton.setOnMouseClicked(cancelListener);
 
+        changePath(System.getProperty("user.dir"));
+
         folderListener = new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-
+                changePath(newValue);
             }
         };
 
-        folderSelector.valueProperty().addListener();
+        folderSelector.valueProperty().addListener(folderListener);
 
-        fileList.getItems().setAll(fs.getListFile(System.getProperty("user.dir")));
 
-        folderSelector.getItems().setAll(fs.getListRepParent(System.getProperty("user.dir")));
+
     }
 }
